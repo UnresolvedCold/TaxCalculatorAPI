@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.PORT || 3000;
 
 const tax_slabs = 
     [[250000, 0], [500000,0.05], [750000,0.1], [1000000,0.15], [1250000,0.2], [1500000,0.25],[Number.MAX_SAFE_INTEGER,0.3]]
