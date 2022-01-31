@@ -25,8 +25,10 @@ function CalculateTax(age, income, regime) {
 }
 
 app.get('/', (req, res) => {
-    var tax = CalculateTax(25, req.query.income, "simple");
-    res.send(tax)
+    var income = parseInt(req.query.income);
+    var tax = CalculateTax(25, income, "simple");
+    console.log(income, typeof(income) ,tax);
+    res.send(tax.toString());
 })
 
 app.listen(port, () => {
