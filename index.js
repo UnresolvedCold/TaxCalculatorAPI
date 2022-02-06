@@ -1,34 +1,22 @@
-const express = require('express')
-const app = express()
+import {CalculateTax} from './taxcalc.js'
+import express from 'express';
+const app = express();
 const port = process.env.PORT || 3000;
 
-const tax_slabs = 
-    [[250000, 0], [500000,0.05], [750000,0.1], [1000000,0.15], [1250000,0.2], [1500000,0.25],[Number.MAX_SAFE_INTEGER,0.3]]
-;
-
-function CalculateTax(age, income, regime) {
-    if (income < tax_slabs[0][0]) return 0;
-    var tax_income = income-tax_slabs[0][0];
-    var tax = 0;
-
-    for (var i=1; i<tax_slabs.length-1; i++) {
-        var slab = tax_slabs[i];
-        var prev_slab = tax_slabs[i-1];
-
-        var increment = slab[0] - prev_slab[0];
-        tax += slab[1] * Math.max(0, Math.min(increment, tax_income));
-        tax_income -= increment;
-    }
-    tax += Math.max(0, tax_slabs[tax_slabs.length-1][1] * tax_income);
-
-    return tax;
-}
-
 app.get('/', (req, res) => {
-    var income = parseInt(req.query.income);
-    var tax = CalculateTax(25, income, "simple");
-    console.log(income, typeof(income) ,tax);
-    res.send(tax.toString());
+    try{
+        var income = parseInt(req.query.income);
+        var age = parseInt(req.query.age);
+        var regime = req.query.regime;
+        var tax = CalculateTax(age, income, regime);
+        
+        console.log(income, age, regime, tax);
+        res.send(tax.toString());
+    }
+    catch(e){
+        console.log(e);
+        res.send("Error");
+    }
 })
 
 app.listen(port, () => {
